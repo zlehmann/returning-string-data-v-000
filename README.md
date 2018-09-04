@@ -2,9 +2,9 @@
 
 ## Objectives
 
-  * Return plain strings as HTTP responses
-  * Explain how the Internet is really just sending strings!
-  * Replace a DIV with a string fetched over HTTP
+- Return plain strings as HTTP responses
+- Explain how the Internet is really just sending strings!
+- Replace a DIV with a string fetched over HTTP
 
 ## Lesson
 
@@ -61,7 +61,7 @@ And in our controller:
 
 Note the `render plain:` call in the controller. Normally, in a RESTful
 action, we allow the controller to implicitly render a template with the
-same name as the action. Here, however, we want to *explicitly* render
+same name as the action. Here, however, we want to _explicitly_ render
 plain text, so we call `render` with the `:plain` option.
 
 **Note:** There are a lot of options for `render`, including plain text,
@@ -69,7 +69,7 @@ files, or nothing at all. Read more about `render` in the [Layouts and
 Rendering](http://guides.rubyonrails.org/layouts_and_rendering.html#using-render) RailsGuide.
 
 Now that we have that action, we can hit it by browsing to
-`/posts/:id/body` and see that we are just rendering plain text. 
+`/posts/:id/body` and see that we are just rendering plain text.
 
 **Hint:** The `/posts` page outputs the post `id` as part of the `<h1>`
 tag, so you can easily get an `id` to use to test this out.
@@ -107,7 +107,7 @@ a common way to communicate that this class is used as a JavaScript
 selector.
 
 We also need to tie the button to a `post`, since it has to ask for the
-right content, so we're using a [data-* attribute](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Using_data_attributes) of `data-id` to hold the `post.id` for us.
+right content, so we're using a [data-\* attribute](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Using_data_attributes) of `data-id` to hold the `post.id` for us.
 
 Now that we have that, let's wire up a `click()` listener to our
 `js-more` buttons and request the post body.
@@ -209,4 +209,3 @@ without doing a page refresh? Certainly we wouldn't want to make a bunch
 of separate requests to endpoints like `/post/:id/body` and
 `/post/:id/title` and `/post/:id/author`, would we? There has to be a
 better way!
-
