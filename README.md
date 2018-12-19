@@ -14,28 +14,27 @@ tell the cats.
 
 ![cat string](http://i.giphy.com/DXgkevJQFPhew.gif)
 
-We put formats around our strings so that we can render them in an
-agreed-upon way, but it's all just strings. All you have to do is drop
-into your terminal and try: `curl https://twitter.com`.
+We format our strings so that we can render them in an agreed-upon way, but it's
+all just strings. All you have to do is drop into your terminal and try: `curl https://twitter.com`.
 
-When the browser requests this URL, this is what it sees. Just one big
-string of markup (HTML) and data. Then it interprets the markup and
-turns it into Twitter. But on the console, with nothing to turn the HTML
-into something, we just see the string.
+When the browser requests this URL, this is what it sees. Just one big string of
+markup (HTML) and data. Then it interprets the markup and turns it into Twitter.
+But on the console using `curl`, with nothing to turn the HTML into something,
+we just see the string.
 
 So if the Internet is just strings, do we always need the markup?
 
 ### Returning Raw Strings from Controller Actions
 
-Included in this repo is a blog application. Run `rake db:seed` and then
-launch the Rails server and browse to `/posts`.
+Included in this repo is a blog application. To start, run `rake db:migrate RAILS_ENV=development`, then run `rake db:seed`. Once both are run, launch the
+Rails server and navigate to `/posts`.
 
 Okay, we have a pretty basic post title and content here, with a teaser
 to only show the first bit of the post body. We want to give them a way
 to interact and ask for the whole post body, so we'll add a button to
 fill in the rest.
 
-We want to do this without redirecting to the post `show` path, so we're
+We want to do this _without_ redirecting to the post `show` path, so we're
 going to use an AJAX request to replace the truncated content with the
 full body.
 
@@ -65,18 +64,21 @@ same name as the action. Here, however, we want to _explicitly_ render
 plain text, so we call `render` with the `:plain` option.
 
 **Note:** There are a lot of options for `render`, including plain text,
-files, or nothing at all. Read more about `render` in the [Layouts and
-Rendering](http://guides.rubyonrails.org/layouts_and_rendering.html#using-render) RailsGuide.
+files, or nothing at all. Read more about `render` in the
+[Layouts and Rendering][layouts] Rails guide.
 
 Now that we have that action, we can hit it by browsing to
-`/posts/:id/body` and see that we are just rendering plain text.
+`/posts/:id/body` and see that we are just rendering plain text. Restart your
+Rails server and check it out.
 
 **Hint:** The `/posts` page outputs the post `id` as part of the `<h1>`
 tag, so you can easily get an `id` to use to test this out.
 
-This route isn't useful at all to the HTML portion of the site, because it has no markup, so we have to consume it another way. That means we just wrote our first API endpoint!
+This route isn't useful at all to the HTML portion of the site, because it has
+no markup, so we have to consume it another way. In other words, we just wrote
+our first API endpoint!
 
-### Consuming a Simple API Endpoint with AJAX
+## Consuming a Simple API Endpoint with AJAX
 
 Okay, we have an API endpoint where we can get the rest of a post body.
 Now it's just a matter of providing a way for the user to request it,
@@ -97,22 +99,27 @@ pass along to our route.
 <button class="js-more" data-id="<%= post.id %>">More...</button>
 ```
 
-**Note:** We're using the [`truncate` helper](http://api.rubyonrails.org/classes/ActionView/Helpers/TextHelper.html#method-i-truncate) here to only show a portion of the potentially long `description` string. By default, `truncate` will cut off everything after 30 characters.
+**Note:** We're using the [`truncate` helper][truncate] here to only show a
+portion of the potentially long `description` string. By default, `truncate`
+will cut off everything after 30 characters.
 
-We need a way to attach a `click()` event listener to the button in
-JavaScript. Since there will be multiple buttons on the page that need
-to respond to the click, we're using `class="js-more"` as an identifier,
-rather than an `id` attribute. Prefixing the `class` name with `js-` is
-a common way to communicate that this class is used as a JavaScript
-selector.
+We need a way to attach a `click()` event listener to the button in JavaScript.
+Since there will be multiple buttons on the page that need to respond to the
+click, we're using `class="js-more"` as an identifier, rather than an `id`
+attribute meant for just one element. Prefixing the `class` name with `js-` is a
+common way to communicate that this class is used as a JavaScript selector.
 
-We also need to tie the button to a `post`, since it has to ask for the
-right content, so we're using a [data-\* attribute](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Using_data_attributes) of `data-id` to hold the `post.id` for us.
+We also need to tie the button to a `post`, since it has to ask for the right
+content, so we're using a [data-\* attribute][attribute] of `data-id` to hold
+the `post.id` for us.
 
 Now that we have that, let's wire up a `click()` listener to our
 `js-more` buttons and request the post body.
 
-We'll use `jQuery` to wire it up in [document `.ready()`](https://api.jquery.com/ready/) in our `index.html.erb` template. Why not the `_post` partial? We only want to do this code once, and the partial will be loaded as many times as we have posts, so putting it in the main template ensures we just use it one time.
+We'll use `jQuery` to wire it up in [document `.ready()`][jquery] in our
+`index.html.erb` template. Why not the `_post` partial? We only want to do this
+code once, and the partial will be loaded as many times as we have posts, so
+putting it in the main template ensures we just use it one time.
 
 ```erb
 # posts/index.html.erb
@@ -140,14 +147,14 @@ route using the `id` we stored in the `data-id` attribute on the button.
 So, if we reload the page and click "more" on a post, we should get an
 alert with the body of that post.
 
-### Replacing Text with the API Response
+## Replacing Text with the API Response
 
 The last thing we need to do is swap out that `alert(data)` call with
 actually putting the response into the body of our post.
 
 If we look back at `_post.html.erb`, we see that our body is in a
 `<div>`. All we need to do is replace the inner text of that `<div>`. To
-do that, we need to identify it with the `post.id`.
+do that, we need to identify it with the `post.id`:
 
 ```erb
 # _post.html.erb
@@ -157,7 +164,7 @@ do that, we need to identify it with the `post.id`.
 <button class="js-more" data-id="<%= post.id %>">More...</button>
 ```
 
-Now we've identified the element as `body-id`, so each `div` will have a
+Now, we've identified the element as `body-id`, so each `div` will have a
 predictable `id`, like `body-1`, `body-2`, and so on.
 
 With that in place, we just need to update our JavaScript to find the
@@ -209,3 +216,8 @@ without doing a page refresh? Certainly we wouldn't want to make a bunch
 of separate requests to endpoints like `/post/:id/body` and
 `/post/:id/title` and `/post/:id/author`, would we? There has to be a
 better way!
+
+[layouts]: http://guides.rubyonrails.org/layouts_and_rendering.html#using-render
+[truncate]: http://api.rubyonrails.org/classes/ActionView/Helpers/TextHelper.html#method-i-truncate
+[attribute]: https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Using_data_attributes
+[jquery]: https://api.jquery.com/ready/
