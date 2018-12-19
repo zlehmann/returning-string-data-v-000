@@ -131,7 +131,7 @@ putting it in the main template ensures we just use it one time.
 $(function () {
   $(".js-more").on('click', function() {
     // get the id from the data attribute
-    var id = $(this).data("id");
+    let id = $(this).data("id");
     $.get("/posts/" + id + "/body", function(data) {
       alert(data);
     });
@@ -176,7 +176,7 @@ right `div` by `id` and replace the text:
 <script type="text/javascript" charset="utf-8">
 $(function () {
   $(".js-more").on('click', function() {
-    var id = $(this).data("id");
+    let id = $(this).data("id");
     $.get("/posts/" + id + "/body", function(data) {
       // Replace text of body-id div
       $("#body-" + id).text(data);
